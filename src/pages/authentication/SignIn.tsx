@@ -1,20 +1,40 @@
 import React from "react";
-function SignInForm() {
+import { axios_instance } from "../../connection/client";
 
+const SignIn = ({ setToken }: { setToken: (token: string) => void }) => {
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        const username = e.target.username.value;
+        const password = e.target.password.value;
+
+        try {
+            const response = await axios_instance.post('user/api/token/', {
+                username: username,
+                password: password
+            });
+
+            const token = response.data.access;
+            localStorage.setItem("token", token); // Store token in localStorage
+            setToken(token); // Update the app state
+        } catch (error) {
+            console.error("Login failed", error);
+        }
+    };
 
     return (
         <div className="bg-black bg-opacity-50 w-[400px] ml-[100px] mt-5 h-[500px] rounded-md z-30 relative p-6 border border-gray-200 shadow-lg">
-            <h2 className="text-black text-4xl mb-6">Sign In</h2>
-            <form>
+            <h2 className="text-black text-4xl mb-2">Sign In</h2>
+            <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                    <label className="block text-black text-sm mb-2" htmlFor="email">
-                        Email
+                    <label className="block text-black text-sm mb-2" htmlFor="username">
+                        Username
                     </label>
                     <input
-                        type="email"
-                        id="email"
+                        type="text"
+                        id="username"
                         className="w-full px-3 py-2 border rounded-md focus:outline-none"
-                        placeholder="Enter your email"
+                        placeholder="Enter your username"
                     />
                 </div>
                 <div className="mb-4">
@@ -28,7 +48,7 @@ function SignInForm() {
                         placeholder="Enter your password"
                     />
                 </div>
-                <button className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
+                <button className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md" type="submit">
                     Login
                 </button>
             </form>
@@ -42,8 +62,7 @@ function SignInForm() {
                 </button>
             </div>
         </div>
-
     );
-}
+};
 
-export default SignInForm;
+export default SignIn;

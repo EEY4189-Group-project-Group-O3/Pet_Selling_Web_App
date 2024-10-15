@@ -1,14 +1,10 @@
-import React, { useState } from 'react'
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+import React from 'react'
 import SignInForm from "./SignIn";
-import SignUpForm from "./SignUp";
+import catsDogs from "../../assets/Rectangle 3.png";
+import dogImg from "../../assets/Ellipse 1.png";
+import "./test.css";
 
-import catsDogs from "../../assets/Rectangle 3.png"
-import dogImg from "../../assets/Ellipse 1.png"
-
-import "./test.css"
-const Login = () => {
-
+const Login = ({ setToken }: { setToken: (token: string) => void }) => {
     return (
         <div className="w-full h-screen overflow-hidden relative" style={{ background: "#FFDF9E" }}>
             <section className='mt-[300px] ml-[100px]'>
@@ -16,19 +12,18 @@ const Login = () => {
             </section>
 
             <div className="z-30 relative">
-                <SignInForm />
+                <SignInForm setToken={setToken} />
             </div>
 
             <div className='absolute bottom-0'>
-                <img src={catsDogs} alt="" className='z-10' />
+                <img src={catsDogs} alt="Cats and Dogs" className='z-10' />
             </div>
 
             <div className='absolute bottom-0 right-0'>
-                <img src={dogImg} alt="" className='z-20' />
+                <img src={dogImg} alt="Dog" className='z-20' />
             </div>
         </div>
-
     )
 }
 
-export default Login
+export default Login;
