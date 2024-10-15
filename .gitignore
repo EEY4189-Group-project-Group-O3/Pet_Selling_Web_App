@@ -2,8 +2,11 @@
 0001_initial.py
 0002_customuser_gender.py
 0003_alter_customuser_password.py
+0002_alter_post_dislikes_alter_post_likes.py
+0003_alter_post_image_post.py
 
-
+post_images/
+profile_images/
 
 db.sqlite3
 
