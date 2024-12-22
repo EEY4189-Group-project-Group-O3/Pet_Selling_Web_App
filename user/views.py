@@ -35,3 +35,11 @@ class LogoutView(APIView):
             return Response({"detail": "Successfully logged out"}, status=204)
         except Exception as e:
             return Response({"error": str(e)}, status=400)
+
+class GetUserProfile(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = CustomUserSerializer(user)
+        return Response(serializer.data)
