@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.hoverComponent{
+    cursor: pointer;
+    @apply hover:bg-gray-100;
+    
+}

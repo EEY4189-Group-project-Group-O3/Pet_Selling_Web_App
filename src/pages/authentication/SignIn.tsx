@@ -1,7 +1,13 @@
 import React from "react";
 import { axios_instance } from "../../connection/client";
+import { useUserContext } from "../../context/useUserContext";
+import { useNavigate } from 'react-router-dom';
 
-const SignIn = ({ setToken }: { setToken: (token: string) => void }) => {
+const SignIn = () => {
+
+    const { setUser } = useUserContext();
+    const navigate = useNavigate();
+
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -9,14 +15,17 @@ const SignIn = ({ setToken }: { setToken: (token: string) => void }) => {
         const password = e.target.password.value;
 
         try {
-            const response = await axios_instance.post('user/api/token/', {
+            const response = await axios_instance.post('user/token/', {
                 username: username,
                 password: password
             });
 
             const token = response.data.access;
-            localStorage.setItem("token", token); // Store token in localStorage
-            setToken(token); // Update the app state
+            localStorage.setItem("token", token);
+            setUser({
+                access_token: token,
+            })
+            navigate("/")
         } catch (error) {
             console.error("Login failed", error);
         }

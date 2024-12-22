@@ -1,7 +1,11 @@
-body {
+/* body {
     overflow: hidden;
-}
+} */
 
 .content {
     background-color: #ffdf9e;
+}
+
+.hide-scroll::-webkit-scrollbar{
+display: none;
 }

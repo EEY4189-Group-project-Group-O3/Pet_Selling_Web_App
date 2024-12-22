@@ -4,7 +4,7 @@ import catsDogs from "../../assets/Rectangle 3.png";
 import dogImg from "../../assets/Ellipse 1.png";
 import "./test.css";
 
-const Login = ({ setToken }: { setToken: (token: string) => void }) => {
+const Login = () => {
     return (
         <div className="w-full h-screen overflow-hidden relative" style={{ background: "#FFDF9E" }}>
             <section className='mt-[300px] ml-[100px]'>
@@ -12,7 +12,7 @@ const Login = ({ setToken }: { setToken: (token: string) => void }) => {
             </section>
 
             <div className="z-30 relative">
-                <SignInForm setToken={setToken} />
+                <SignInForm />
             </div>
 
             <div className='absolute bottom-0'>

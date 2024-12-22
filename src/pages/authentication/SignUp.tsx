@@ -5,7 +5,7 @@ function SignUpForm() {
         email: "",
         password: ""
     });
-    const handleChange = evt => {
+    const handleChange = (evt:any) => {
         const value = evt.target.value;
         setState({
             ...state,
@@ -13,7 +13,7 @@ function SignUpForm() {
         });
     };
 
-    const handleOnSubmit = evt => {
+    const handleOnSubmit = (evt:any) => {
         evt.preventDefault();
 
         const { name, email, password } = state;
