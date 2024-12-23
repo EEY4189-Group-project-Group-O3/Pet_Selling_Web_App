@@ -9,14 +9,14 @@ post_images/
 profile_images/
 
 db.sqlite3
-
+.env
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 
 # C extensions
 *.so
-
+static_root/
 # Distribution / packaging
 bin/
 build/

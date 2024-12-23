@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Post_Image, Post_Comment
+from .models import Post, Post_Image, Post_Comment, Post_Likes
 
 
 # class PostSerializer(serializers.ModelSerializer):
@@ -14,22 +14,58 @@ class PostImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PostUserCommentSerializer(serializers.ModelSerializer):
+    user_first_name = serializers.CharField(
+        source='user.first_name', read_only=True)
+    user_profile_image = serializers.ImageField(
+        source='user.profile_image', read_only=True)
+
+    class Meta:
+        model = Post_Comment
+        fields = ['user_first_name', 'user_profile_image', 'text']
+
+
 class PostCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post_Comment
         fields = '__all__'
 
 
-class PostCreateSerializer(serializers.ModelSerializer):
+class PostLikeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Post
+        model = Post_Likes
         fields = '__all__'
 
 
+class PostLikesSerializer(serializers.ModelSerializer):
+    user_first_name = serializers.CharField(
+        source='user.first_name', read_only=True)
+    user_profile_image = serializers.ImageField(
+        source='user.profile_image', read_only=True)
+
+    class Meta:
+        model = Post_Likes
+        fields = ['user_first_name', 'user_profile_image']
+
+
+class PostLikesSerializer(serializers.ModelSerializer):
+    user_first_name = serializers.CharField(
+        source='user.first_name', read_only=True)
+    user_profile_image = serializers.ImageField(
+        source='user.profile_image', read_only=True)
+
+    class Meta:
+        model = Post_Likes
+        fields = ['user_first_name', 'user_profile_image']
+
+
+class PostCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['text', 'user']
+
+
 class PostSerializer(serializers.ModelSerializer):
-    total_likes = serializers.IntegerField(read_only=True)  # Removed 'source'
-    total_dislikes = serializers.IntegerField(
-        read_only=True)  # Removed 'source'
     images = PostImageSerializer(
         many=True, read_only=True, source='post_image_set')  # Related images
     comments_count = serializers.SerializerMethodField()
@@ -39,7 +75,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'text', 'date_time', 'user', 'images',
-                  'comments_count', 'total_likes', 'total_dislikes', 'profile_data']
+                  'comments_count', 'profile_data']
 
     def get_comments_count(self, obj):
         return Post_Comment.objects.filter(post=obj).count()
