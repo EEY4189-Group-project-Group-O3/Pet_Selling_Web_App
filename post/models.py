@@ -1,5 +1,6 @@
 from django.db import models
 from user.models import CustomUser
+from user.models import UserProfile
 import os
 from django.utils import timezone
 ORIGINAL_PHOTO_LOCATION = 'post_images'
@@ -9,6 +10,14 @@ class Post(models.Model):
     text = models.TextField()
     date_time = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+    def get_profile_data(self):
+        profile = UserProfile.objects.get(user=self.user)
+        return {
+            'first_name': profile.first_name,
+            'last_name': profile.last_name,
+            'profile_image': profile.profile_image.url
+        }
 
     def __str__(self):
         return self.text
@@ -38,9 +47,25 @@ class Post_Comment(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
+    def get_profile_data(self):
+        profile = UserProfile.objects.get(user=self.user)
+        return {
+            'first_name': profile.first_name,
+            'last_name': profile.last_name,
+            'profile_image': profile.profile_image.url
+        }
+
 
 class Post_Likes(models.Model):
     status = models.CharField(max_length=10)
     date_time = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, unique=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    def get_profile_data(self):
+        profile = UserProfile.objects.get(user=self.user)
+        return {
+            'first_name': profile.first_name,
+            'last_name': profile.last_name,
+            'profile_image': profile.profile_image.url
+        }

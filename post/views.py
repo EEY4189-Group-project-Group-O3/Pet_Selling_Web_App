@@ -81,7 +81,7 @@ class PostCommentList(APIView):
         response_data = {
             "total_comments": total_comments,
             "user_comments": user_commented,
-            "liked_users": comment_users_serialized,
+            "comment_users": comment_users_serialized,
         }
 
         return Response(response_data, status=200)

@@ -4,6 +4,9 @@
 0003_alter_customuser_password.py
 0002_alter_post_dislikes_alter_post_likes.py
 0003_alter_post_image_post.py
+0002_remove_customuser_address_remove_customuser_email_and_more.py
+0003_alter_userprofile_profile_image.py
+
 
 post_images/
 profile_images/
