@@ -20,7 +20,7 @@ export const useCheckNotification = () => {
         {},
         null
       ),
-    onSuccess: (_, id) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["get-user-notifications"],
         exact: false,
