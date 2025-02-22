@@ -88,6 +88,8 @@ class PostCommentList(APIView):
         return Response(response_data, status=200)
 
     def post(self, request, pk):
+        post = Post.objects.get(pk=pk)
+
         data = {
             'text': request.data['comment'],
             'user': request.user.id,
@@ -98,7 +100,7 @@ class PostCommentList(APIView):
             serializer.save()
 
             notification = NotificationCreateSerializer(data={
-                    "user": request.user.id,
+                    "user": post.user.id,
                     "message": f"{request.user.username} commented your post '{data['text'][0:20]}...'"
                     })
             if notification.is_valid():
@@ -159,7 +161,7 @@ class AddorRemoveLike(APIView):
             serializer.save()
             if data['status'] == "like":
                 notification = NotificationCreateSerializer(data={
-                    "user": request.user.id,
+                    "user": post.user.id,
                     "message": f"{request.user.username} liked your post"
                     })
                 if notification.is_valid():
