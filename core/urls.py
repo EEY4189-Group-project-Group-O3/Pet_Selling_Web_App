@@ -42,6 +42,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('user.urls')),
     path('post/', include('post.urls')),
+    path('notification/', include('notifications.urls')),
 
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',
