@@ -1,11 +1,10 @@
-import axios from 'axios';
+import axios from "axios";
 
 // http://35.78.193.134/
 
 export const axios_instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000/',
-    headers: {
-        "Content-Type": 'application/json',
-    }
+  baseURL: "http://3.113.1.155/",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
-
