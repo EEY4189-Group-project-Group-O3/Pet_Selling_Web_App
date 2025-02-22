@@ -8,6 +8,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from utils.PaginationClass import PostPagination
 from rest_framework import generics
+from notifications.serializers import NotificationCreateSerializer
 
 
 class GetALlPost(generics.ListAPIView):
@@ -95,6 +96,14 @@ class PostCommentList(APIView):
         serializer = serializers.PostCommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+
+            notification = NotificationCreateSerializer(data={
+                    "user": request.user.id,
+                    "message": f"{request.user.username} commented your post '{data['text'][0:20]}...'"
+                    })
+            if notification.is_valid():
+                notification.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -148,6 +157,14 @@ class AddorRemoveLike(APIView):
         serializer = serializers.PostLikeSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+            if data['status'] == "like":
+                notification = NotificationCreateSerializer(data={
+                    "user": request.user.id,
+                    "message": f"{request.user.username} liked your post"
+                    })
+                if notification.is_valid():
+                    notification.save()
+                
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
