@@ -74,8 +74,9 @@ export const useAddPetPost = () => {
     // },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["get-pet-posts", 1],
+        queryKey: ["get-pet-posts"],
         exact: false,
+        refetchType: "all",
       });
     },
   });
