@@ -1,7 +1,6 @@
 import { Image } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
-import { axios_instance } from '../../connection/client';
 import { calculateTimeAgo } from '../../utils/CalculateTimeAgo';
 import { IoSendSharp } from "react-icons/io5";
 import clsx from 'clsx';
@@ -12,8 +11,7 @@ const Posts = ({ initialPost }: any) => {
     const [comment, setComment] = useState({
         comment: '',
     });
-
-    const { data: post_likes, refetch: likes_refetch } = useGetPetPostLikes({}, post.id)
+    const { data: post_likes } = useGetPetPostLikes({}, post.id)
     const { data: post_comments, refetch: comments_refetch } = useGetPetPostComments({}, post.id)
 
 
@@ -35,23 +33,14 @@ const Posts = ({ initialPost }: any) => {
             total_dislikes: post_likes.user_disliked ? post_likes.total_dislikes - 1 : post_likes.total_dislikes,
         };
 
-        setPost((prevPost) => ({
+        setPost((prevPost: any) => ({
             ...prevPost,
             total_likes: updatedLikes.total_likes,
         }));
 
-        likePostMutate(null, {
-            onSuccess: () => {
-                likes_refetch();
-            },
-            onError: (err) => {
-                console.error("Error liking post:", err);
-                likes_refetch();
-            },
-        });
+        likePostMutate();
 
     }
-
 
     const handleAddDisLike = () => {
 
@@ -65,20 +54,12 @@ const Posts = ({ initialPost }: any) => {
             total_dislikes: post_likes.user_disliked ? post_likes.total_dislikes - 1 : post_likes.total_dislikes + 1,
         };
 
-        setPost((prevPost) => ({
+        setPost((prevPost: any) => ({
             ...prevPost,
             total_likes: updatedLikes.total_likes,
         }));
 
-        disLikePostMutate(null, {
-            onSuccess: () => {
-                likes_refetch();
-            },
-            onError: (err) => {
-                console.error("Error liking post:", err);
-                likes_refetch();
-            },
-        });
+        disLikePostMutate();
 
     }
 
@@ -100,7 +81,7 @@ const Posts = ({ initialPost }: any) => {
                 <section>
                     <section className='flex gap-3'>
 
-                        <Image src='http://localhost:8000/media/profile_images/Logo-1.webp' borderRadius={"50%"} boxSize={"50px"} objectFit='contain' className='border-solid border-2 border-sky-500' />
+                        <Image src={post?.profile_data.profile_image} borderRadius={"50%"} boxSize={"50px"} objectFit='contain' className='border-solid border-2 border-sky-500' />
                         <section className='flex flex-col gap-0'>
                             <p className='font-bold text-red-900'>{post.profile_data.first_name === null ? "By Me" : post.profile_data.first_name} </p>
                             <p className='font-normal text-sm text-black'>{calculateTimeAgo(post.date_time)}</p>
@@ -173,11 +154,11 @@ const Posts = ({ initialPost }: any) => {
 
                 <ul>
                     {
-                        post_comments?.liked_users.map((comment: any, index: number) => {
+                        post_comments?.comment_users.map((comment: any, index: number) => {
                             return (
                                 <li key={index} className='bg-white p-2 rounded-md mb-2 flex gap-5 items-center'>
-                                    <Image src={comment.user_profile_image} boxSize={"30px"} objectFit='cover' borderRadius={"50%"} />
-                                    <p className='font-semibold'>{comment.user_first_name}:</p>
+                                    <Image src={comment.user.profile_image} boxSize={"30px"} objectFit='cover' borderRadius={"50%"} />
+                                    <p className='font-semibold'><span>{comment.user.first_name}</span> <span>{comment.user.last_name}</span>:</p>
                                     <p>{comment.text}</p>
                                 </li>
                             )

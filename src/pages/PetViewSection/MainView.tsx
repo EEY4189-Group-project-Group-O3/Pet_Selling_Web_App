@@ -1,4 +1,3 @@
-import React from 'react'
 import Header from '../../components/Header'
 import boy from '../../assets/boy.png'
 import girl from '../../assets/girl.png'

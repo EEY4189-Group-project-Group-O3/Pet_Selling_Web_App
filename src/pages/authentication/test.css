@@ -26,7 +26,41 @@ a {
     margin: 15px 0;
 }
 
-button {
+
+.login-btn {
+    background-color: #fff000;
+    border-radius: 12px;
+    width: 150px;
+    color: #000;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px 15px;
+    text-align: center;
+    transition: 200ms;
+    box-sizing: border-box;
+    border: 0;
+    font-size: 16px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+  
+  .login-btn:not(:disabled):hover,
+  .login-btn:not(:disabled):focus {
+    outline: 0;
+    background: #f4e603;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.2), 0 3px 8px 0 rgba(0,0,0,.15);
+  }
+  
+  .login-btn:disabled {
+    filter: saturate(0.2) opacity(0.5);
+    -webkit-filter: saturate(0.2) opacity(0.5);
+    cursor: not-allowed;
+  }
+
+  
+
+/* button {
     border-radius: 20px;
     border: 1px solid #ff4b2b;
     background-color: #ff4b2b;
@@ -50,9 +84,9 @@ button:focus {
 button.ghost {
     background-color: transparent;
     border-color: #ffffff;
-}
+} */
 
-form {
+/* form {
     background-color: #ffffff;
     display: flex;
     align-items: center;
@@ -61,7 +95,7 @@ form {
     padding: 0 50px;
     height: 100%;
     text-align: center;
-}
+} */
 
 input {
     background-color: #eee;

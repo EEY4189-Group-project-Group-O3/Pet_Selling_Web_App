@@ -1,23 +1,29 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChatIcon, BellIcon } from '@chakra-ui/icons';
 import { Image } from '@chakra-ui/react';
 import bgLogo from '../assets/Your Pet 1.png';
+import profile_image from '../assets/profile_image.jpg'
 import { CgProfile } from "react-icons/cg";
 import { CiSettings, CiLogout } from "react-icons/ci";
 import { Divider } from '@chakra-ui/react';
 import clsx from 'clsx';
+import { Notification } from './notification/Notification';
 
 const Header = () => {
     const [showProfileMenue, setShowProfileMenue] = useState(false);
-    const menuRef = useRef(null);
+    const menuRef = useRef<HTMLDivElement | null>(null)
 
     const handleLogout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('refresh');
+        localStorage.removeItem('user');
+
+
         window.location.href = '/login';
     };
 
-    const handleClickOutside = (event) => {
-        if (menuRef.current && !menuRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+        if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
             setShowProfileMenue(false);
         }
     };
@@ -42,11 +48,12 @@ const Header = () => {
             </section>
 
             <section className='flex-1 flex justify-end gap-3 box-border items-center'>
-                <BellIcon w={5} h={5} />
+                <Notification/>
                 <ChatIcon w={5} h={5} />
                 <div className='block relative'>
                     <Image
-                        src='https://bit.ly/dan-abramov'
+                        src={localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string).profile_image
+                            : profile_image}
                         className="mr-5 cursor-pointer"
                         alt='Profile Picture'
                         boxSize={"30px"}

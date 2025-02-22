@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
-import { Button, Image, Modal, ModalBody, ModalCloseButton, ModalContent, IconButton, ModalHeader, Textarea, Divider, Box, Text, SimpleGrid } from '@chakra-ui/react'
+import { Button, Image, ModalBody, ModalCloseButton, ModalContent, IconButton, ModalHeader, Textarea, Divider, Box, Text, SimpleGrid } from '@chakra-ui/react'
 import { useDropzone } from 'react-dropzone'
 import { CiImageOn } from "react-icons/ci";
 import { IoIosCloseCircle } from "react-icons/io";
 import { Spinner } from '@chakra-ui/react'
-import { axios_instance } from '../../connection/client';
 import { useAddPetPost } from '../../pages/PetViewSection/hooks/PetPostHook';
+import profile_image from '../../assets/profile_image.jpg'
 interface createpostProps {
   onClose: () => void
 }
@@ -28,13 +28,13 @@ const CreatePost = ({ onClose }: createpostProps) => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: 'image/*',
+    accept: { 'image/*': [] },
     multiple: true
   })
 
 
 
-  const handleRemoveImage = (file: File, index: number) => {
+  const handleRemoveImage = (index: number) => {
     // Remove the image from the state
     setUploadedFiles(uploadedFiles.filter((_, i) => i !== index))
   }
@@ -86,9 +86,23 @@ const CreatePost = ({ onClose }: createpostProps) => {
         <Divider />
         <ModalBody>
           <section className="flex m-2">
-            <Image src='https://bit.ly/dan-abramov' className="mr-5" alt='Dan Abramov' boxSize={"30px"} objectFit='cover' borderRadius={"50%"} />
+            <Image src={localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string)?.profile_image
+              : profile_image}
+              className="mr-5" alt='Dan Abramov' boxSize={"30px"} objectFit='cover' borderRadius={"50%"} />
             <div className='flex flex-col'>
-              <p>Sandun Tharaka</p>
+              <p>
+                <span>
+                  {
+                    JSON.parse(localStorage.getItem('user') as string)?.first_name
+                  }
+                </span>
+                <span>
+                  {
+                    JSON.parse(localStorage.getItem('user') as string)?.last_name
+                  }
+                </span>
+
+              </p>
               <p>public</p>
             </div>
           </section>
@@ -130,7 +144,7 @@ const CreatePost = ({ onClose }: createpostProps) => {
               {uploadedFiles.map((file, index) => (
                 <div className='relative mt-3'>
                   <div className=' absolute right-0 -top-3 '>
-                    <IoIosCloseCircle className='hover:text-red-500' onClick={e => handleRemoveImage(file, index)} />
+                    <IoIosCloseCircle className='hover:text-red-500' onClick={() => handleRemoveImage(index)} />
                   </div>
                   <Image
                     key={index}

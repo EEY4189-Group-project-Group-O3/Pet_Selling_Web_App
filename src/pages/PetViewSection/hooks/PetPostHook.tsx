@@ -1,6 +1,6 @@
 import { axios_instance } from "../../../connection/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-
+import { PostLikesInterface, PostCommentsInterface } from "../../../types";
 const requestPetPost = async (data: any, request: string, rq_type: string, params: any, content_type: string | null) => {
     const headers = {
         "Content-Type": content_type === null ? 'application/json' : content_type,
@@ -52,17 +52,19 @@ export const useGetPetPostsPagination = (params: any) => {
     })
 }
 
+
+
 export const useGetPetPostLikes = (params: any, id: number) => {
-    return useQuery<any[], Error>({
-        queryKey: ["get-pet-posts-likes"],
+    return useQuery<PostLikesInterface, Error>({
+        queryKey: ["get-pet-posts-likes", id],
         queryFn: () => requestPetPost(null, `/post/likes/${id}`, 'GET', params, null),
     })
 }
 
 
 export const useGetPetPostComments = (params: any, id: number) => {
-    return useQuery<any[], Error>({
-        queryKey: ["get-pet-posts-comments"],
+    return useQuery<PostCommentsInterface, Error>({
+        queryKey: ["get-pet-posts-comments", id],
         queryFn: () => requestPetPost(null, `/post/comments/${id}`, 'GET', params, null),
     })
 }
@@ -92,9 +94,9 @@ export const useAddPetPost = () => {
 export const useLikePost = (id: number) => {
 
     const queryClient = useQueryClient();
-    return useMutation({
+    return useMutation<void, Error, void>({
         mutationKey: ["add-pet-like"],
-        mutationFn: (data: any) => requestPetPost(null, `/post/like/${id}`, 'POST', {}, null),
+        mutationFn: () => requestPetPost(null, `/post/like/${id}`, 'POST', {}, null),
 
         onSuccess: () => {
             queryClient.invalidateQueries(
@@ -111,9 +113,9 @@ export const useLikePost = (id: number) => {
 export const useDisLikePost = (id: number) => {
 
     const queryClient = useQueryClient();
-    return useMutation({
+    return useMutation<void, Error, void>({
         mutationKey: ["add-pet-dislike"],
-        mutationFn: (data: any) => requestPetPost(null, `/post/dislike/${id}`, 'POST', {}, null),
+        mutationFn: () => requestPetPost(null, `/post/dislike/${id}`, 'POST', {}, null),
 
         onSuccess: () => {
             queryClient.invalidateQueries(
