@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BellIcon } from "@chakra-ui/icons";
+import { NotificationInterface } from "../../types";
 import clsx from "clsx";
 import {
   useGetNotifications,
@@ -9,7 +10,7 @@ import {
 export const Notification = () => {
   const [show, setShow] = useState(false);
   //   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<NotificationInterface[]>([]);
 
   const token = localStorage.getItem("token");
 
@@ -46,7 +47,10 @@ export const Notification = () => {
   const { mutate: checkNotificationMutate } = useCheckNotification();
 
   useEffect(() => {
-    setMessages(notifications);
+    if (notifications !== undefined) {
+      setMessages(notifications);
+    }
+
     console.log(notifications);
   }, [notifications]);
 
@@ -77,7 +81,7 @@ export const Notification = () => {
           <div className="grid gap-3 cursor-pointer ">
             {messages?.map((message, index) => (
               <div
-                key={message.id}
+                key={index}
                 onClick={() => handleRead(message)}
                 className={clsx(
                   "p-4 rounded-lg cursor-pointer transition-colors",
