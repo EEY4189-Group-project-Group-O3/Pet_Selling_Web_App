@@ -30,8 +30,7 @@ SECRET_KEY = 'django-insecure-kkg6dij3%03&gs%7rsugze89e_d7hu%d9ed+4-tl^l_lp0vx03
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = ["3.113.1.155", "mypetousl.netlify.app"]
 
 # Application definition
 
@@ -181,7 +180,7 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
 }
 
-
+CSRF_TRUSTED_ORIGINS = ["https://mypetousl.netlify.app", "http://3.113.1.155"]
 CORS_ALLOW_ALL_ORIGINS = True
 
 
