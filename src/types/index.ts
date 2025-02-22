@@ -24,6 +24,6 @@ export interface PostCommentsInterface {
 export interface NotificationInterface {
   id: number;
   message: string;
-  created_at: string;
+  created: string;
   read: boolean;
 }
