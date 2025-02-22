@@ -16,6 +16,7 @@ export const Notification = () => {
 
   useEffect(() => {
     const ws = new WebSocket(
+      // `ws://localhost:8001/ws/notifications/?token=${token}`
       `wss://celonedev.online/ws/notifications/?token=${token}`
     );
 
