@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { BellIcon } from "@chakra-ui/icons";
 import clsx from "clsx";
-import { axios_instance } from "../../connection/client";
 import {
   useGetNotifications,
   useCheckNotification,
@@ -9,7 +8,7 @@ import {
 
 export const Notification = () => {
   const [show, setShow] = useState(false);
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+  //   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<string[]>([]);
 
   const token = localStorage.getItem("token");
@@ -21,7 +20,7 @@ export const Notification = () => {
 
     ws.onopen = () => {
       console.log("WebSocket connected!");
-      setSocket(ws);
+      //   setSocket(ws);
     };
 
     ws.onmessage = (event) => {
