@@ -6,5 +6,5 @@ urlpatterns = [
     path('<int:pk>/', NotificationDetailView.as_view()),
     path('<int:pk>/mark-as-read/', MarkAsReadView.as_view()),
     
-    # path('debug-websocket/', DebugWebSocketView.as_view()),
+    path('debug-websocket/', DebugWebSocketView.as_view()),
 ]
