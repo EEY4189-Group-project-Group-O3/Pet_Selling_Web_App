@@ -2,8 +2,6 @@ import { axios_instance } from "../../../connection/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { PostLikesInterface, PostCommentsInterface } from "../../../types";
 const requestPetPost = async (data: any, request: string, rq_type: string, params: any, content_type: string | null) => {
-
-    console.log("RRRRRRQRQRRQQR:", request, rq_type, params, content_type)
     const headers = {
         "Content-Type": content_type === null ? 'application/json' : content_type,
         'Authorization': `Bearer ${localStorage.getItem('token')}`

@@ -20,7 +20,7 @@ const Posts = ({ initialPost }: any) => {
     const { mutate: addcomment } = useAddComment(post.id)
 
 
-    console.log("post_likes", post_comments)
+
     const handleAddLike = () => {
 
         if (!post_likes) return;

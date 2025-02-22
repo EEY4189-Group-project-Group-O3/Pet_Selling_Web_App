@@ -7,6 +7,7 @@ import { CgProfile } from "react-icons/cg";
 import { CiSettings, CiLogout } from "react-icons/ci";
 import { Divider } from '@chakra-ui/react';
 import clsx from 'clsx';
+import { Notification } from './notification/Notification';
 
 const Header = () => {
     const [showProfileMenue, setShowProfileMenue] = useState(false);
@@ -47,7 +48,7 @@ const Header = () => {
             </section>
 
             <section className='flex-1 flex justify-end gap-3 box-border items-center'>
-                <BellIcon w={5} h={5} />
+                <Notification/>
                 <ChatIcon w={5} h={5} />
                 <div className='block relative'>
                     <Image
