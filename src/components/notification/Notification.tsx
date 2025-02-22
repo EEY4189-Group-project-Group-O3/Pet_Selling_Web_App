@@ -16,7 +16,7 @@ export const Notification = () => {
 
   useEffect(() => {
     const ws = new WebSocket(
-      `ws://localhost:8001/ws/notifications/?token=${token}`
+      `ws://3.113.1.155:8001/ws/notifications/?token=${token}`
     );
 
     ws.onopen = () => {
