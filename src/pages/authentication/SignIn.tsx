@@ -8,9 +8,11 @@ const SignIn = () => {
   const { setUser } = useUserContext();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setError("");
     const username = e.target.username.value;
     const password = e.target.password.value;
 
@@ -22,31 +24,36 @@ const SignIn = () => {
       });
 
       const token = response.data.access;
+
+      // Set token in localStorage
       localStorage.setItem("token", token);
+
+      // Update user context
       setUser({
         access_token: token,
       });
 
-      axios_instance
-        .get("user/profile", {
+      try {
+        const profileResponse = await axios_instance.get("user/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-        .then((response) => {
-          setLoading(false);
-
-          localStorage.setItem("user", JSON.stringify(response.data));
-          navigate("/");
-        })
-        .catch((error) => {
-          setLoading(false);
-
-          console.error("Failed to get user profile", error);
         });
-    } catch (error) {
-      setLoading(false);
 
+        localStorage.setItem("user", JSON.stringify(profileResponse.data));
+        window.dispatchEvent(new Event("authChange"));
+        navigate("/");
+      } catch (profileError) {
+        console.error("Failed to get user profile", profileError);
+        setError("Could not fetch user profile");
+        setLoading(false);
+      }
+    } catch (error: any) {
+      setLoading(false);
+      setError(
+        error.response?.data?.detail ||
+          "Login failed. Please check your credentials."
+      );
       console.error("Login failed", error);
     }
   };
@@ -54,6 +61,11 @@ const SignIn = () => {
   return (
     <div className="bg-black bg-opacity-50 w-[400px] ml-[100px] mt-5 h-[500px] rounded-md z-30 relative p-6 border border-gray-200 shadow-lg">
       <h2 className="text-white font-bold text-4xl mb-2">Sign In</h2>
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="text-black ">
         <div className="mb-4">
           <label className="block text-white text-sm mb-2" htmlFor="username">
@@ -64,6 +76,7 @@ const SignIn = () => {
             id="username"
             className="w-full px-3 py-2 border rounded-md focus:outline-none"
             placeholder="Enter your username"
+            required
           />
         </div>
         <div className="mb-4">
@@ -75,6 +88,7 @@ const SignIn = () => {
             id="password"
             className="w-full px-3 py-2 border rounded-md focus:outline-none"
             placeholder="Enter your password"
+            required
           />
         </div>
 
@@ -82,8 +96,10 @@ const SignIn = () => {
           <button
             className="login-btn flex justify-center items-center gap-2"
             type="submit"
+            disabled={loading}
           >
-            Login {loading && <Spinner color="teal.500" />}
+            {loading ? "Logging in..." : "Login"}{" "}
+            {loading && <Spinner color="teal.500" />}
           </button>
         </div>
       </form>
@@ -93,16 +109,6 @@ const SignIn = () => {
         <a href="/sign-up" className="text-[#ebb961] cursor-pointer">
           Sign Up
         </a>
-      </div>
-      {/* onClick={() => navigate('sign-up')} */}
-
-      <div className="flex flex-col mt-6 space-y-4">
-        {/* <button className="w-full bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md">
-                    Login with Facebook
-                </button>
-                <button className="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md">
-                    Login with Google
-                </button> */}
       </div>
     </div>
   );
