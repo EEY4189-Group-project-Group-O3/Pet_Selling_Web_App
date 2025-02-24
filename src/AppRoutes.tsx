@@ -17,7 +17,6 @@ const isTokenValid = (token: string | null): boolean => {
 };
 
 const AppRoutes = () => {
-  const { user } = useUserContext();
   const token = localStorage.getItem("token");
 
   if (!isTokenValid(token)) {
