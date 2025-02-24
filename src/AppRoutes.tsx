@@ -1,30 +1,37 @@
-import { Route, Routes, Navigate } from 'react-router-dom';
-import MainView from './pages/PetViewSection/MainView';
-import Login from './pages/authentication/Login';
-import { useUserContext } from './context/useUserContext';
-import SignUp from './pages/authentication/SignUp';
-import CreateProfile from './pages/authentication/CreateProfile';
+import { Route, Routes, Navigate } from "react-router-dom";
+import MainView from "./pages/PetViewSection/MainView";
+import Login from "./pages/authentication/Login";
+import { useUserContext } from "./context/useUserContext";
+import SignUp from "./pages/authentication/SignUp";
+import CreateProfile from "./pages/authentication/CreateProfile";
+import { jwtDecode } from "jwt-decode";
+
+const isTokenValid = (token: string | null): boolean => {
+  if (!token) return false;
+  try {
+    const decoded: any = jwtDecode(token);
+    return decoded.exp * 1000 > Date.now();
+  } catch (error) {
+    return false;
+  }
+};
 
 const AppRoutes = () => {
   const { user } = useUserContext();
-  const token = localStorage.getItem('token');
-  console.log(user);
+  const token = localStorage.getItem("token");
 
-  if (!token) {
-    // Redirect all paths to login when user is not authenticated
+  if (!isTokenValid(token)) {
+    localStorage.removeItem("token");
+
     return (
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/profile-create" element={<CreateProfile />} />
-
-
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
   }
-
-
 
   // Render authenticated routes
   return (
