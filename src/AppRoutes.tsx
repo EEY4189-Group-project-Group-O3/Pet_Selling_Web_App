@@ -1,7 +1,6 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import MainView from "./pages/PetViewSection/MainView";
 import Login from "./pages/authentication/Login";
-import { useUserContext } from "./context/useUserContext";
 import SignUp from "./pages/authentication/SignUp";
 import CreateProfile from "./pages/authentication/CreateProfile";
 import { jwtDecode } from "jwt-decode";

@@ -3,14 +3,11 @@ import { Image, Modal, ModalOverlay, useDisclosure } from "@chakra-ui/react";
 import CreatePost from "./CreatePost";
 import { useGetPetPostsPagination } from "../../pages/PetViewSection/hooks/PetPostHook";
 import profile_image from "../../assets/profile_image.jpg";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 const PostMainComponent = () => {
-  const navigate = useNavigate();
   // const [data, setData] = useState([])
   const { isOpen, onOpen, onClose } = useDisclosure();
   // const [page, setPage] = useState(1)
-  const { data: posts, error } = useGetPetPostsPagination({});
+  const { data: posts } = useGetPetPostsPagination({});
   const handleClickPostCreate = () => {
     onOpen();
   };
