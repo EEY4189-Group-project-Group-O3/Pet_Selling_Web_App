@@ -1,5 +1,5 @@
 import { axios_instance } from "../../../connection/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { PostCategoryInterface } from "../../../types";
 const requestPetPost = async (
   data: any,
