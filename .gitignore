@@ -6,6 +6,7 @@
 0003_alter_post_image_post.py
 0002_remove_customuser_address_remove_customuser_email_and_more.py
 0003_alter_userprofile_profile_image.py
+0002_postcategory_post_categories.py
 
 .env
 post_images/

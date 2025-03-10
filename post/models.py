@@ -5,12 +5,18 @@ import os
 from django.utils import timezone
 ORIGINAL_PHOTO_LOCATION = 'post_images'
 
+class PostCategory(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='subcategories')
 
+    def __str__(self):
+        return self.name
 class Post(models.Model):
     text = models.TextField()
     date_time = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-
+    categories = models.ManyToManyField(PostCategory, related_name="posts") 
     def get_profile_data(self):
         profile = UserProfile.objects.get(user=self.user)
         return {
@@ -69,3 +75,4 @@ class Post_Likes(models.Model):
             'last_name': profile.last_name,
             'profile_image': profile.profile_image.url
         }
+    

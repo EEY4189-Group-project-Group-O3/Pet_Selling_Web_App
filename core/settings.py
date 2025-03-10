@@ -30,8 +30,8 @@ SECRET_KEY = 'django-insecure-kkg6dij3%03&gs%7rsugze89e_d7hu%d9ed+4-tl^l_lp0vx03
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["3.113.1.155", "mypetousl.netlify.app","celonedev.online"]
-
+ALLOWED_HOSTS = ["*"]
+# 3.113.1.155", "mypetousl.netlify.app","celonedev.online
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'channels',
     'drf_yasg',
+    'django_filters',
     'user',
     'post',
     'notifications',
@@ -91,6 +92,11 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+
+FILE_UPLOAD_HANDLERS = [
+    "django.core.files.uploadhandler.TemporaryFileUploadHandler",
+]
 
 
 # Database
@@ -156,6 +162,8 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 104857600
+FILE_UPLOAD_MAX_MEMORY_SIZE = 104857600
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -181,7 +189,13 @@ SIMPLE_JWT = {
 }
 
 CSRF_TRUSTED_ORIGINS = ["https://mypetousl.netlify.app", "http://3.113.1.155"]
-CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://mypetousl.netlify.app",
+    "http://mypetousl.netlify.app",
+
+]
 
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')

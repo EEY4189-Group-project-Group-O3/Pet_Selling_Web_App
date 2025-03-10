@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Post_Image, Post_Comment, Post_Likes
+from .models import Post, Post_Image, Post_Comment, Post_Likes,PostCategory
 
 
 # class PostSerializer(serializers.ModelSerializer):
@@ -48,9 +48,20 @@ class PostLikesSerializer(serializers.ModelSerializer):
 
 
 class PostCreateSerializer(serializers.ModelSerializer):
+    categories = serializers.ListField(
+        child=serializers.IntegerField(),
+        write_only=True,
+    )
     class Meta:
         model = Post
-        fields = ['text', 'user']
+        fields = ['text', 'user','categories']
+
+    def create(self, validated_data):
+        print(validated_data)
+        categories_data = validated_data.pop('categories', [])
+        post = Post.objects.create(**validated_data)
+        post.categories.set(PostCategory.objects.filter(id__in=categories_data))
+        return post
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -67,3 +78,9 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_comments_count(self, obj):
         return Post_Comment.objects.filter(post=obj).count()
+    
+
+class PostCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostCategory
+        fields = '__all__'

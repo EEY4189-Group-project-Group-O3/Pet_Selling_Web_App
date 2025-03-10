@@ -1,6 +1,8 @@
 from django.urls import path
-from .views import PostView, PostImageList, PostCommentList, AddorRemoveLike, AddorRemoveDisLike, GetALlPost, GetAllLikes
+from .views import PostView, PostImageList, PostCommentList, AddorRemoveLike, AddorRemoveDisLike, GetALlPost, GetAllLikes,GetAllCategories
 urlpatterns = [
+    path('category/all', GetAllCategories.as_view()),
+
     path('post/all', GetALlPost.as_view()),
 
     path('post/', PostView.as_view()),
