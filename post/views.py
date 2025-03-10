@@ -1,7 +1,9 @@
 from rest_framework.views import APIView
+from django.db.models import Q
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
-from .models import Post, Post_Image, Post_Comment, Post_Likes
+from .models import Post, Post_Image, Post_Comment, Post_Likes,PostCategory
 from . import serializers
 # from .serializers import PostSerializer, PostImageSerializer, PostCommentSerializer, PostCreateSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -9,44 +11,76 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from utils.PaginationClass import PostPagination
 from rest_framework import generics
 from notifications.serializers import NotificationCreateSerializer
+import json
 
+class GetAllCategories(APIView):
+    def get(self, request):
+        categories = PostCategory.objects.all()
+        serializer = serializers.PostCategorySerializer(categories, many=True)
+        return Response(serializer.data, status=200)
 
 class GetALlPost(generics.ListAPIView):
-    queryset = Post.objects.all().order_by('-date_time')
+    filter_backends = [DjangoFilterBackend]
     serializer_class = serializers.PostSerializer
-    # pagination_class = PostPagination
+
+    def get_queryset(self):
+        queryset = Post.objects.all().order_by('-date_time')
+        category_id = self.request.query_params.get('category_id', None)
+        keyword = self.request.query_params.get('keyword', None)
+        
+        if category_id:
+            queryset = queryset.filter(categories__id=category_id)
+        
+        if keyword:
+            queryset = queryset.filter(Q(text__icontains=keyword))
+        
+        return queryset
 
 
 class PostView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
-    # def get(self, request):
-    #     posts = Post.objects.all()
-    #     paginated_posts = self.paginate_queryset(posts)
-    #     serializer = PostSerializer(paginated_posts, many=True)
-    #     return Response(serializer.data)
-
     def post(self, request, *args, **kwargs):
-        # Include the user in the data
-        data = request.data.copy()
+        data = request.data.dict() if isinstance(request.data, dict) else request.data
         data['user'] = request.user.id
-        data['likes'] = 0
-        data['dislikes'] = 0
         images = request.FILES.getlist('images', None)
 
-        # Serialize and validate
+        print(data)
+
+        if "images" in data:
+
+            if "categories" in data:
+                try:
+                    json_categories = json.loads(data["categories"])
+                    data["categories"] = [ i['id'] for i in json_categories]
+                    print(data["categories"])
+                except (json.JSONDecodeError, KeyError, ValueError) as e:
+                    print(e)
+                    return Response({"error": "Invalid categories format"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+             if "categories" in data:
+                try:
+                    json_categories = json.loads(data["categories"])
+                    data["categories"] = [ i['id'] for i in json_categories][0]
+                    print(data["categories"])
+                except (json.JSONDecodeError, KeyError, ValueError) as e:
+                    print(e)
+                    return Response({"error": "Invalid categories format"}, status=status.HTTP_400_BAD_REQUEST)
+        
+
         serializer = serializers.PostCreateSerializer(data=data)
         if serializer.is_valid():
             post = serializer.save()
 
-            # Save images
             if images:
                 for img in images:
                     Post_Image.objects.create(post=post, image=img)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # return Response(status=status.HTTP_201_CREATED)
+
 
 
 class PostImageList(APIView):
