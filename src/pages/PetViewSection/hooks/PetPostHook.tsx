@@ -41,7 +41,7 @@ const requestPetPost = async (
 
 export const useGetPetPostsPagination = (params: any) => {
   return useQuery<any[], Error>({
-    queryKey: ["get-pet-posts", params.page],
+    queryKey: ["get-pet-posts", params.category_id || "all"],
     queryFn: () => requestPetPost(null, "/post/post/all", "GET", params, null),
   });
 };
