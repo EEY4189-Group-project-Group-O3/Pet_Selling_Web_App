@@ -19,13 +19,31 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { Spinner } from "@chakra-ui/react";
 import { useAddPetPost } from "../../pages/PetViewSection/hooks/PetPostHook";
 import profile_image from "../../assets/profile_image.jpg";
+import { CategoryDropdown } from "./CategoryDropdown";
+import { IoCloseCircleSharp } from "react-icons/io5";
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from "@chakra-ui/react";
 interface createpostProps {
   onClose: () => void;
 }
 
+interface category {
+  id: string;
+  name: string;
+}
+
 const CreatePost = ({ onClose }: createpostProps) => {
+  const [error, setError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
   const [showImgInsert, setShowImgInsert] = React.useState(false);
   const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([]);
+  const [selectedCategories, setSelectedCategories] = React.useState<
+    category[]
+  >([]);
   // const [isLoading, setIsLoading] = React.useState(false)
   const [postData, setPostData] = React.useState({
     content: "",
@@ -60,12 +78,24 @@ const CreatePost = ({ onClose }: createpostProps) => {
 
   const handlePost = () => {
     // setIsLoading(true)
-    const formData = new FormData();
-    uploadedFiles.forEach((file) => {
-      formData.append("images", file);
-    });
-    formData.append("text", postData.content);
-    mutate(formData);
+    if (selectedCategories.length > 0) {
+      const formData = new FormData();
+      uploadedFiles.forEach((file) => {
+        formData.append("images", file);
+      });
+      formData.append("text", postData.content);
+      formData.append("categories", JSON.stringify(selectedCategories));
+
+      mutate(formData);
+    } else {
+      setErrorMessage("Please select a category");
+      setError(true);
+
+      setTimeout(() => {
+        setError(false);
+        setErrorMessage("");
+      }, 3000);
+    }
   };
   return (
     <div className="w-[250px]">
@@ -106,6 +136,39 @@ const CreatePost = ({ onClose }: createpostProps) => {
               <p>public</p>
             </div>
           </section>
+          <div className="flex justify-end mb-2">
+            <CategoryDropdown
+              onSelect={(category) =>
+                setSelectedCategories([
+                  ...selectedCategories,
+                  { id: category.id, name: category.name },
+                ])
+              }
+              inpostform={true}
+            />
+          </div>
+
+          <div className="flex gap-2 items-center m-2">
+            {
+              // Show selected categories
+              selectedCategories.map((category, index) => (
+                <div
+                  key={index}
+                  className="flex gap-1 items-center bg-gray-500 p-1 rounded-md text-white"
+                >
+                  <p>{category.name}</p>
+                  <IoCloseCircleSharp
+                    className="cursor-pointer"
+                    onClick={() =>
+                      setSelectedCategories(
+                        selectedCategories.filter((_, i) => i !== index)
+                      )
+                    }
+                  />
+                </div>
+              ))
+            }
+          </div>
 
           <Textarea
             placeholder="What’s on your mind?"
@@ -189,6 +252,13 @@ const CreatePost = ({ onClose }: createpostProps) => {
             <span>Post</span> {isPending && <Spinner />}
           </Button>
         </div>
+        {error && (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertTitle mr={2}>Error!</AlertTitle>
+            <AlertDescription>{errorMessage}</AlertDescription>
+          </Alert>
+        )}
       </ModalContent>
     </div>
   );

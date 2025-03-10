@@ -27,3 +27,9 @@ export interface NotificationInterface {
   created: string;
   read: boolean;
 }
+
+export interface PostCategoryInterface {
+  id: number;
+  name: string;
+  parent: number | null;
+}
