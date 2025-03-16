@@ -5,6 +5,7 @@ import SignUp from "./pages/authentication/SignUp";
 import CreateProfile from "./pages/authentication/CreateProfile";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
+import AccessoriesView from "./pages/Accessories/AccessoriesView";
 
 const isTokenValid = (token: string | null): boolean => {
   if (!token) return false;
@@ -59,7 +60,7 @@ const AppRoutes = () => {
     return (
       <Routes>
         <Route path="/" element={<MainView />} />
-        {/* Redirect authenticated users away from auth pages */}
+        <Route path="/accessories" element={<AccessoriesView />} />
         <Route path="/login" element={<Navigate to="/" replace />} />
         <Route path="/sign-up" element={<Navigate to="/" replace />} />
         <Route path="/profile-create" element={<Navigate to="/" replace />} />

@@ -29,6 +29,8 @@ import {
 } from "@chakra-ui/react";
 interface createpostProps {
   onClose: () => void;
+  isAccessories: boolean;
+  accessories_id?: string | undefined;
 }
 
 interface category {
@@ -36,7 +38,11 @@ interface category {
   name: string;
 }
 
-const CreatePost = ({ onClose }: createpostProps) => {
+const CreatePost = ({
+  onClose,
+  isAccessories,
+  accessories_id,
+}: createpostProps) => {
   const [error, setError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
   const [showImgInsert, setShowImgInsert] = React.useState(false);
@@ -48,6 +54,7 @@ const CreatePost = ({ onClose }: createpostProps) => {
   const [postData, setPostData] = React.useState({
     content: "",
   });
+
   const addImages = () => {
     setShowImgInsert(!showImgInsert);
   };
@@ -76,27 +83,46 @@ const CreatePost = ({ onClose }: createpostProps) => {
     }
   }, [isError, isSuccess]);
 
+  useEffect(() => {}, [selectedCategories]);
+
   const handlePost = () => {
-    // setIsLoading(true)
     if (selectedCategories.length > 0) {
+      let updatedCategories = [...selectedCategories];
+
+      if (isAccessories) {
+        const isAlreadyAdded = updatedCategories.some(
+          (cat) => cat.id === accessories_id
+        );
+        if (!isAlreadyAdded) {
+          updatedCategories.push({
+            id: accessories_id as string,
+            name: "Accessories",
+          });
+        }
+      }
+
+      setSelectedCategories(updatedCategories); // Update state
+
+      // Use updatedCategories immediately (since setState is async)
       const formData = new FormData();
       uploadedFiles.forEach((file) => {
         formData.append("images", file);
       });
       formData.append("text", postData.content);
-      formData.append("categories", JSON.stringify(selectedCategories));
+      console.log("Sending Categories:", updatedCategories); // Logs updated value
+      formData.append("categories", JSON.stringify(updatedCategories));
 
       mutate(formData);
     } else {
       setErrorMessage("Please select a category");
       setError(true);
-
       setTimeout(() => {
         setError(false);
         setErrorMessage("");
       }, 3000);
     }
   };
+
   return (
     <div className="w-[250px]">
       <ModalContent>
