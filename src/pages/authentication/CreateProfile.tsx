@@ -78,7 +78,7 @@ const CreateProfile = () => {
   return (
     <div className="bg-red-400 w-full h-screen">
       <div className="flex justify-center">
-        <div className="w-[400px] bg-white rounded-md mt-20">
+        <div className="w-[400px] bg-white rounded-md my-20 overflow-scroll max-h-[80vh]">
           <div className="flex justify-center p-2">
             <img
               src={Logo}
