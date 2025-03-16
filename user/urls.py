@@ -20,7 +20,8 @@ from .views import (
     CustomUserCreateView,
     CustomTokenObtainPairView,
     LogoutView,
-    UserProfileView
+    UserProfileView,
+    SellerRequestView
 )
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
@@ -33,5 +34,6 @@ urlpatterns = [
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('profile/', UserProfileView.as_view(), name='get_profile'),
+    path('seller-request/', SellerRequestView.as_view(), name='seller_request'),
 
 ]

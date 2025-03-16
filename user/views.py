@@ -54,7 +54,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
-from .serializers import CustomUserSerializer, UserProfileSerializer
+from .serializers import CustomUserSerializer, UserProfileSerializer,SellerRequestSerializer
 from .models import CustomUser, UserProfile
 
 
@@ -117,3 +117,13 @@ class UserProfileView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+
+
+class SellerRequestView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = SellerRequestSerializer
+
+    def create(self, request, *args, **kwargs):
+        request.data['user'] = request.user.id
+        return super().create(request, *args, **kwargs)

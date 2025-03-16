@@ -38,7 +38,7 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils import timezone
-from .models import CustomUser, UserProfile
+from .models import CustomUser, UserProfile,SellerRequest
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -54,10 +54,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    user_type = serializers.CharField(source="user.user_type", read_only=True)
     class Meta:
         model = UserProfile
         fields = ['email', 'first_name', 'last_name',
-                  'phone', 'address', 'gender', 'profile_image']
+                  'phone', 'address', 'gender', 'profile_image', 'user_type']
 
     def create(self, validated_data):
         user = self.context['request'].user
@@ -83,3 +84,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         self.user.save(update_fields=['last_login'])
 
         return data
+
+
+class SellerRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SellerRequest
+        fields = '__all__'

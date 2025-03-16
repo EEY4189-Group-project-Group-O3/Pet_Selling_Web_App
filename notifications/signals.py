@@ -7,6 +7,7 @@ from .models import Notification
 @receiver(post_save, sender=Notification)
 def notify_users(sender, instance, created, **kwargs):
     if created:
+        print("Notification created ✅")
         channel_layer = get_channel_layer()
         group_name = f"user_{instance.user.id}"
         async_to_sync(channel_layer.group_send)(

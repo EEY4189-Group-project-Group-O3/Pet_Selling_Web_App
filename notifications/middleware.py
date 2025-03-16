@@ -2,8 +2,7 @@ from urllib.parse import parse_qs
 from django.contrib.auth.models import AnonymousUser
 from channels.db import database_sync_to_async
 from rest_framework_simplejwt.tokens import AccessToken
-from user.models import CustomUser  # Import your CustomUser model
-
+from user.models import CustomUser  
 @database_sync_to_async
 def get_user_from_token(token):
     try:
