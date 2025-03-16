@@ -8,10 +8,17 @@ import { CiSettings, CiLogout } from "react-icons/ci";
 import { Divider } from "@chakra-ui/react";
 import clsx from "clsx";
 import { Notification } from "./notification/Notification";
+import { useLocation, Link } from "react-router-dom";
+
+import { Modal, ModalOverlay, useDisclosure } from "@chakra-ui/react";
+import TobeSeller from "./requsesmodals/TobeSeller";
 
 const Header = () => {
+  const location = useLocation();
   const [showProfileMenue, setShowProfileMenue] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -35,8 +42,8 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="w-full p-2 bg-orange-600 flex fixed top-0 left-0 transition-transform duration-300 z-50">
-      <section className="flex-1 flex gap-0">
+    <div className="w-full p-1 bg-orange-600 flex fixed top-0 left-0 transition-transform duration-300 z-50">
+      <section className="flex-1 flex gap-0 items-center">
         <Image
           src={bgLogo}
           className="mr-5"
@@ -48,8 +55,24 @@ const Header = () => {
       </section>
 
       <section className="flex-3 flex gap-5">
-        <p className="font-medium">Home</p>
-        <p className="font-medium">Accessories</p>
+        <Link
+          to="/"
+          className={`font-semibold cursor-pointer ${
+            location.pathname === "/" ? "font-bold text-white" : "text-black"
+          }`}
+        >
+          Home
+        </Link>
+        <Link
+          to="/accessories"
+          className={`font-medium cursor-pointer ${
+            location.pathname === "/accessories"
+              ? "font-bold text-white"
+              : "text-black"
+          }`}
+        >
+          Accessories
+        </Link>
       </section>
 
       <section className="flex-1 flex justify-end gap-3 box-border items-center">
@@ -91,6 +114,13 @@ const Header = () => {
                 <CiSettings size={25} className="text-orange-600" />
                 Settings
               </p>
+              <p
+                className="font-semibold flex gap-3 items-center cursor-pointer p-2 rounded-lg hover:bg-slate-400"
+                onClick={onOpen}
+              >
+                <CiSettings size={25} className="text-orange-600" />
+                Request to be a seller
+              </p>
             </div>
             <Divider className="bg-red-500 h-[1px]" />
             <div>
@@ -105,6 +135,10 @@ const Header = () => {
           </div>
         </div>
       </section>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <TobeSeller setClose={onClose} />
+      </Modal>
     </div>
   );
 };

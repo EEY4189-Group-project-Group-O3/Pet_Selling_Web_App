@@ -59,7 +59,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="bg-black bg-opacity-50 w-[400px] ml-[100px] mt-5 h-[500px] rounded-md z-30 relative p-6 border border-gray-200 shadow-lg">
+    <div className="bg-black bg-opacity-50 w-[400px] ml-[100px] mt-5  rounded-md z-30 relative p-6 border border-gray-200 shadow-lg">
       <h2 className="text-white font-bold text-4xl mb-2">Sign In</h2>
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">

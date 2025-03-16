@@ -8,9 +8,19 @@ import profile_image from "../../assets/profile_image.jpg";
 import { FaSearch } from "react-icons/fa";
 import { MdSort } from "react-icons/md";
 import { CategoryDropdown } from "./CategoryDropdown";
-const PostMainComponent = () => {
+
+interface PostMainComponentProps {
+  isAccessories: boolean;
+  accessories_id?: string | undefined;
+}
+const PostMainComponent = ({
+  isAccessories,
+  accessories_id,
+}: PostMainComponentProps) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    isAccessories && accessories_id !== undefined ? accessories_id : null
+  );
 
   const handleSearch = () => {
     // onSearch(searchTerm);
@@ -23,9 +33,11 @@ const PostMainComponent = () => {
   }, [searchTerm]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [profile, setProfile] = useState<any>();
   const { data: posts, refetch } = useGetPetPostsPagination({
     category_id: selectedCategory !== null ? selectedCategory : undefined,
     keyword: searchTerm !== "" ? searchTerm : undefined,
+    exclude_accessories: isAccessories ? undefined : true,
   });
 
   const handleClickPostCreate = () => {
@@ -37,31 +49,69 @@ const PostMainComponent = () => {
     refetch();
   };
 
+  useEffect(() => {
+    let profile = localStorage.getItem("user");
+    if (profile) {
+      setProfile(JSON.parse(profile));
+    }
+  }, [""]);
+
   return (
     <div className=" bg-opacity-50 flex flex-col">
-      <div className="flex justify-center items-center mt-3 mb-3 p-2">
-        <div>
-          <Image
-            src={
-              localStorage.getItem("user")
-                ? JSON.parse(localStorage.getItem("user") as string)
-                    .profile_image
-                : profile_image
-            }
-            className="mr-5"
-            alt="Dan Abramov"
-            boxSize={"30px"}
-            objectFit="cover"
-            borderRadius={"50%"}
+      {isAccessories ? (
+        profile?.user_type === "seller" ? (
+          <div className="flex justify-center items-center mt-3 mb-3 p-2">
+            <div>
+              <Image
+                src={
+                  localStorage.getItem("user")
+                    ? JSON.parse(localStorage.getItem("user") as string)
+                        .profile_image
+                    : profile_image
+                }
+                className="mr-5"
+                alt="Dan Abramov"
+                boxSize={"30px"}
+                objectFit="cover"
+                borderRadius={"50%"}
+              />
+            </div>
+            <input
+              type="text"
+              placeholder="create your own post"
+              className="rounded-md p-2"
+              onClick={handleClickPostCreate}
+            />
+          </div>
+        ) : (
+          ""
+        )
+      ) : (
+        <div className="flex justify-center items-center mt-3 mb-3 p-2">
+          <div>
+            <Image
+              src={
+                localStorage.getItem("user")
+                  ? JSON.parse(localStorage.getItem("user") as string)
+                      .profile_image
+                  : profile_image
+              }
+              className="mr-5"
+              alt="Dan Abramov"
+              boxSize={"30px"}
+              objectFit="cover"
+              borderRadius={"50%"}
+            />
+          </div>
+          <input
+            type="text"
+            placeholder="create your own post"
+            className="rounded-md p-2"
+            onClick={handleClickPostCreate}
           />
         </div>
-        <input
-          type="text"
-          placeholder="create your own post"
-          className="rounded-md p-2"
-          onClick={handleClickPostCreate}
-        />
-      </div>
+      )}
+
       <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-5 p-4 bg-orange-300 rounded-lg shadow-md">
         <div className="relative w-full sm:w-72">
           <input
@@ -104,7 +154,11 @@ const PostMainComponent = () => {
 
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
-        <CreatePost onClose={onClose} />
+        <CreatePost
+          onClose={onClose}
+          isAccessories={isAccessories}
+          accessories_id={accessories_id}
+        />
       </Modal>
     </div>
   );
