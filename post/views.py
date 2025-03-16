@@ -27,6 +27,10 @@ class GetALlPost(generics.ListAPIView):
         queryset = Post.objects.all().order_by('-date_time')
         category_id = self.request.query_params.get('category_id', None)
         keyword = self.request.query_params.get('keyword', None)
+        exclude_accessories = self.request.query_params.get('exclude_accessories', None)
+        if exclude_accessories:
+            queryset = queryset.exclude(categories__name="Accessories")
+        
         
         if category_id:
             queryset = queryset.filter(categories__id=category_id)
@@ -45,7 +49,6 @@ class PostView(APIView):
         data['user'] = request.user.id
         images = request.FILES.getlist('images', None)
 
-        print(data)
 
         if "images" in data:
 
@@ -53,7 +56,6 @@ class PostView(APIView):
                 try:
                     json_categories = json.loads(data["categories"])
                     data["categories"] = [ i['id'] for i in json_categories]
-                    print(data["categories"])
                 except (json.JSONDecodeError, KeyError, ValueError) as e:
                     print(e)
                     return Response({"error": "Invalid categories format"}, status=status.HTTP_400_BAD_REQUEST)
@@ -61,8 +63,7 @@ class PostView(APIView):
              if "categories" in data:
                 try:
                     json_categories = json.loads(data["categories"])
-                    data["categories"] = [ i['id'] for i in json_categories][0]
-                    print(data["categories"])
+                    data["categories"] = [ int(i['id']) for i in json_categories]
                 except (json.JSONDecodeError, KeyError, ValueError) as e:
                     print(e)
                     return Response({"error": "Invalid categories format"}, status=status.HTTP_400_BAD_REQUEST)

@@ -156,4 +156,18 @@ class UserProfile(models.Model):
             "phone": self.phone,
             "address": self.address,
             "profile_image": self.profile_image.url if self.profile_image else None,
+            "user_type": self.user.user_type,
         }
+    
+
+class SellerRequest(models.Model):
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE, related_name="seller_request")
+    name = models.CharField(max_length=100)
+    contact_number = models.CharField(max_length=20)
+    address = models.CharField(max_length=100)
+    description = models.TextField()
+    is_approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Seller Request of {self.user.username}"
